@@ -50,6 +50,13 @@ int main()
     // #################
     // #################
     // Your code here...
+    vector<double> C(6);
+    C[0] = -1*((m2*l)/(m1+m2)); // m1 is M; m2 is m. 
+    C[1] = -1*C[0];
+    C[2] = 1/(m1+m2);
+    C[3] = 3/(4*l);
+    C[4] = (3*g)/(4*l);
+    C[5] = 3/(4*m2*l*l);
     // TASK 2.4: complete the fowlling function in the same way as you have done for f_printtimeoptions and f_printmodelparameters
     // #################
     f_printcoefficients(C); // func.h
@@ -75,11 +82,44 @@ int main()
     // #################
     // Your code here...
     // TASK 1.4: implement the system matrix A (a 4x4 matrix) and fill it accordingly to segway_background.pdf page 8
+    vector<vector<double>> A(4);
+    for (unsigned int i = 0;i < A.size();i++){
+      A[i].resize(4);
+    }
+    for (unsigned int i = 0;i < A.size();i++){
+      for (unsigned int j = 0;j < A[i].size();j++){
+        A[i][j] = 0;
+        if (i == 2 and j == 3) {
+          A[i][j] = (C[1]*C[4])/(1-C[1]*C[3]);
+        }
+        if (i == 4 and j == 3){
+          A[i][j] = C[4]/(1-C[1]*C[3]);
+        }
+        if (i == 1 and j == 2){
+          A[i][j] = 1;
+        }
+        if (i == 3 and j == 4){
+          A[i][j] = 1;
+        }
+    }
     // #################
     /* for b1,b2 and F (and T) c.f. segway_background.pdf p. 8 */
     // #################
     // Your code here...
     // TASK 1.5: do the same for the vectors b1 and b2
+    vector<double> b1(4),b2(4);
+    for (unsigned int i = 0;i < b1.size();i++){
+      b1[i] = 0;
+      b2[i] = 0;
+      if (i==1){
+        b1[i] = C[2]/(1-(C[1]*C[3]));
+        b2[i] = (C[1]*C[5])/(1-(C[1]*C[3]));
+      }
+      if (i==3){
+        b1[i] = (C[2]*C[3])/(1-(C[1]*C[3]));
+        b2[i] = (C[5])/(1-(C[1]*C[3]));
+      }
+    }
     // #################
     vector<double> F(n);
     f_vecinit(F); // func.h
