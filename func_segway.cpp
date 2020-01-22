@@ -25,18 +25,34 @@ void f_segway(  unsigned int                                m,
 
     // #################
     // Your code here...
-    // TASK 4.1: computing F = -K*y;
     // #################
+    // TASK 4.1: computing F = -K*y;
+     // loop to get -K
+    for (unsigned int i = 0; i < K.size(); i++) {
+        temp[i] = -1 * K[i];
+    }
+
+    // calling function to compute the product 
+    F[m]=f_scalarp(temp, yt);
+
     // #################
     // Your code here...
     // TASK 4.2: computing temp = A*y
     // #################
+    // Calling a function to do the computation as specified...
+    f_matvecmult(temp, A, yt);
     // #################
     // Your code here...
     // TASK 4.3: computing dydt = temp + b1*F+b2*T
     // #################
+    // Creating a loop to do the computation as specified...
+    for (unsigned i = 0; i < dydt.size(); i++) {
+        dydt[i] = temp[i] + b1[i] * F[m] + b2[i] * T[m];
+    }
     // #################
     // Your code here...
     // TASK 4.4: assign dydt to k with the veccpy function
+    // Calling a function to do the computation as specified...
+    f_veccpy(ki,dydt);
     // #################
 }
