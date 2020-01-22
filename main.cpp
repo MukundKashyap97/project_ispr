@@ -23,6 +23,11 @@ int main()
     // #################
     // Your code here...
     // TASK 1.1: calculate n (number of time-steps), create the tspan vector to save the time-steps
+    int n; // variable for number of time-steps
+    // evaluating the value of n and initialising
+    n = ((tend - tsta) * framerate) + 1;
+    // creating the tspan vector of size n
+    vector<double> tspan(n);
     // #################
     f_vecinit(tspan); // func.h
     // #################
@@ -36,6 +41,12 @@ int main()
     // #################
     // Your code here...
     // TASK 1.2: variables g,m1,m2,l
+    double g, m1, m2, l;
+    g = 9.810; // Acceleration due to gravity
+    m1 = 1.080; // Mass of the cart
+    m2 = 0.360; // Mass of the pendulum
+    l = 0.204; // Length of the pendulum
+
     // #################
     // #################
     // Your code here...
@@ -50,13 +61,15 @@ int main()
     // #################
     // #################
     // Your code here...
+    // creating the vector, C, contains values of coefficients as specified in the pdf
     vector<double> C(6);
-    C[0] = -1*((m2*l)/(m1+m2)); // m1 is M; m2 is m. 
-    C[1] = -1*C[0];
-    C[2] = 1/(m1+m2);
-    C[3] = 3/(4*l);
-    C[4] = (3*g)/(4*l);
-    C[5] = 3/(4*m2*l*l);
+    // assigning the values of coefficients to the vector
+    C[0] = -1.0 * ((m2 * l) / (m1 + m2)); // m1 is M; m2 is m as specified above
+    C[1] = -1.0 * C[0];
+    C[2] = 1.0 / (m1 + m2);
+    C[3] = 3.0 / (4.0 * l);
+    C[4] = (3.0 * g) / (4.0 * l); // g is acceleration due to gravity; l is the length of the pendulum
+    C[5] = 3.0 / (4.0 * m2 * l * l);
     // TASK 2.4: complete the fowlling function in the same way as you have done for f_printtimeoptions and f_printmodelparameters
     // #################
     f_printcoefficients(C); // func.h
@@ -82,24 +95,27 @@ int main()
     // #################
     // Your code here...
     // TASK 1.4: implement the system matrix A (a 4x4 matrix) and fill it accordingly to segway_background.pdf page 8
+     // Initialising the matrix below...
     vector<vector<double>> A(4);
-    for (unsigned int i = 0;i < A.size();i++){
+    for (unsigned int i = 0; i < A.size(); i++) {
       A[i].resize(4);
     }
-    for (unsigned int i = 0;i < A.size();i++){
-      for (unsigned int j = 0;j < A[i].size();j++){
-        A[i][j] = 0;
-        if (i == 2 and j == 3) {
-          A[i][j] = (C[1]*C[4])/(1-C[1]*C[3]);
-        }
-        if (i == 4 and j == 3){
-          A[i][j] = C[4]/(1-C[1]*C[3]);
-        }
-        if (i == 1 and j == 2){
-          A[i][j] = 1;
-        }
-        if (i == 3 and j == 4){
-          A[i][j] = 1;
+    f_matinit(A);
+    // Creating loops to change specific values of the matrix A...
+    for (unsigned int i = 0; i < A.size(); i++) {
+        for (unsigned int j = 0; j < A[i].size(); j++) {
+            if ((i == 1) && (j == 2)) {
+                A[i][j] = (C[1] * C[4]) / (1 - C[1] * C[3]);
+            }
+            if ((i == 3) && (j == 2)) {
+                A[i][j] = C[4] / (1 - C[1] * C[3]);
+            }
+            if ((i == 0) && (j == 1)){
+                A[i][j] = 1;
+            }
+            if((i == 2) && (j == 3)){
+                A[i][j] = 1;
+            }
         }
     }
     // #################
@@ -107,18 +123,20 @@ int main()
     // #################
     // Your code here...
     // TASK 1.5: do the same for the vectors b1 and b2
-    vector<double> b1(4),b2(4);
-    for (unsigned int i = 0;i < b1.size();i++){
-      b1[i] = 0;
-      b2[i] = 0;
-      if (i==1){
-        b1[i] = C[2]/(1-(C[1]*C[3]));
-        b2[i] = (C[1]*C[5])/(1-(C[1]*C[3]));
-      }
-      if (i==3){
-        b1[i] = (C[2]*C[3])/(1-(C[1]*C[3]));
-        b2[i] = (C[5])/(1-(C[1]*C[3]));
-      }
+    // Initialising the vectors b1 and b2 below...
+    vector<double> b1(4), b2(4);
+    f_vecinit(b1);
+    f_vecinit(b2);
+    // Creating loops to change specific values in vectors b1 and b2 
+    for (unsigned int i = 0; i < b1.size(); i++) {
+        if (i==1) {
+            b1[i] = C[2] / (1 - (C[1] * C[3]));
+            b2[i] = (C[1] * C[5]) / (1 - (C[1] * C[3]));
+        }
+        if (i==3) {
+            b1[i] = (C[2] * C[3]) / (1 - (C[1] * C[3]));
+            b2[i] = (C[5]) / (1 - (C[1] * C[3]));
+        }
     }
     // #################
     vector<double> F(n);
@@ -160,7 +178,13 @@ int main()
     // Your code here...
     // TASK 1.6: create a matrix 4x(nof time steps) that contains for every time steps the vector of the 4 unknowns
     // #################
+     // Initialising the matrix y below...  
+    vector<vector<double>> y(4);
+      for (unsigned int j = 0; j < y.size(); j++) {
+          y[j].resize(n+1);
+      }
     f_matinit(y);
+    
 
     /* Runge-Kutta-method */
     // #################
