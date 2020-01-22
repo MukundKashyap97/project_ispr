@@ -150,6 +150,8 @@ void f_veccpy(std::vector<double> &v, const std::vector<double> &w){
     // #################
     // Your code here...
     // TASK 5.1: copy v's values on w
+    // Using the notation specified in vector libraries
+    v = w;
     // #################
 }
 
@@ -159,8 +161,12 @@ double f_scalarp(const std::vector<double> &v, const std::vector<double> &w){
     // #################
     // Your code here...
     // TASK 5.2: do the scalar product computation
+    // Creating a loop to do the scalar product computation below...
+    for (unsigned int i = 0; i < msize; i++) {
+        val = val + (v[i] * w[i]);
+    }
     // #################
-    return val;
+    return val; // val is the scalar product after the termination of the loop
 }
 
 void f_matvecmult(std::vector<double> &w, const std::vector< std::vector<double> > &A, const std::vector<double> &v){
@@ -172,6 +178,10 @@ void f_matvecmult(std::vector<double> &w, const std::vector< std::vector<double>
     // #################
     // Your code here...
     // TASK 5.3: do the matrix vector multiplication
+    // Creating a loop and using a defined function to compute the matrix product
+    for (unsigned int i = 0; i < mrsize; i++) {
+        w[i] = f_scalarp(A[i], v);
+    }
     // #################
 }
 
@@ -179,6 +189,11 @@ void f_vecupd(std::vector<double> &w, const double a, const std::vector<double> 
     // #################
     // Your code here...
     // TASK 5.4: write a routine, that assings the vector w = w + a*v
+    unsigned int msize = f_checksize(v.size(), w.size());
+    // Creating a loop to perform the specified routine 
+    for (unsigned int i = 0; i < msize; i++) {
+        w[i] = w[i] + (a * v[i]); // w = w + a*v for each iteration
+    }
     // #################
 }
 
